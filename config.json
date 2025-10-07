@@ -1,0 +1,6 @@
+{
+  "HTTP_SERVER_URL": "http://127.0.0.1:8001/mcp",
+  "HTTP_TIMEOUT": 30,
+  "STDIO_PYTHON_EXECUTABLE": "D:\\github_projects\\jsfit-helpdesk-rag_mcp_server_stdio_01\\.venv\\Scripts\\python.exe",
+  "STDIO_SERVER_SCRIPT": "D:\\github_projects\\jsfit-helpdesk-rag_mcp_server_stdio_01\\rag_mcp_server_stdio_01.py"
+}

@@ -3,17 +3,25 @@
 プロジェクト全体の定数を管理するモジュール
 """
 
+import json
+import os
+
+# JSONファイルから設定を読み込み
+_config_path = os.path.join(os.path.dirname(__file__), "config.json")
+with open(_config_path, "r", encoding="utf-8") as f:
+    _config = json.load(f)
+
 # ========================================
 # MCPサーバー設定（HTTP方式用）
 # ========================================
-HTTP_SERVER_URL = "http://127.0.0.1:8001/mcp"  # デフォルトのHTTPサーバーURL
-HTTP_TIMEOUT = 30  # タイムアウト設定（秒）
+HTTP_SERVER_URL = _config["HTTP_SERVER_URL"]  # デフォルトのHTTPサーバーURL
+HTTP_TIMEOUT = _config["HTTP_TIMEOUT"]  # タイムアウト設定（秒）
 
 # ========================================
 # MCPサーバー設定（標準入出力方式用）
 # ========================================
-STDIO_PYTHON_EXECUTABLE = "D:\\github_projects\\jsfit-helpdesk-rag_mcp_server_stdio_01\\.venv\\Scripts\\python.exe"
-STDIO_SERVER_SCRIPT = "D:\\github_projects\\jsfit-helpdesk-rag_mcp_server_stdio_01\\rag_mcp_server_stdio_01.py"
+STDIO_PYTHON_EXECUTABLE = _config["STDIO_PYTHON_EXECUTABLE"]
+STDIO_SERVER_SCRIPT = _config["STDIO_SERVER_SCRIPT"]
 
 # ========================================
 # 使用するLLMモデル
