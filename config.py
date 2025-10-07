@@ -12,8 +12,8 @@ HTTP_TIMEOUT = 30  # タイムアウト設定（秒）
 # ========================================
 # MCPサーバー設定（標準入出力方式用）
 # ========================================
-STDIO_PYTHON_EXECUTABLE = "D:\\github_projects\\jsfit-helpdesk-poc-sample_rag_mcp_server_stdio\\.venv\\Scripts\\python.exe"
-STDIO_SERVER_SCRIPT = "D:\\github_projects\\jsfit-helpdesk-poc-sample_rag_mcp_server_stdio\\rag_mcp_server_stdio.py"
+STDIO_PYTHON_EXECUTABLE = "D:\\github_projects\\jsfit-helpdesk-rag_mcp_server_stdio_01\\.venv\\Scripts\\python.exe"
+STDIO_SERVER_SCRIPT = "D:\\github_projects\\jsfit-helpdesk-rag_mcp_server_stdio_01\\rag_mcp_server_stdio_01.py"
 
 # ========================================
 # 使用するLLMモデル
