@@ -12,12 +12,12 @@ async def create_mcp_tools() -> List[Tool]:
 
     # 複数のサーバへの接続を定義（公式ドキュメントの形式に合わせて修正）
     server_connections = {
-        "work-rules-stdio-01": {
+        "work-rules-stdio": {
             "command": STDIO_PYTHON_EXECUTABLE,
             "args": [STDIO_SERVER_SCRIPT],
             "transport": "stdio",
         },
-        "security-http-01": {
+        "security-http": {
             "url": HTTP_SERVER_URL,
             "transport": "streamable_http",
         },
