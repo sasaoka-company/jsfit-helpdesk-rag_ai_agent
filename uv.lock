@@ -2104,6 +2104,49 @@ wheels = [
 ]
 
 [[package]]
+name = "rag-ai-agent"
+version = "0.1.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "anthropic" },
+    { name = "fastapi" },
+    { name = "fastmcp" },
+    { name = "google-generativeai" },
+    { name = "langchain" },
+    { name = "langchain-anthropic" },
+    { name = "langchain-community" },
+    { name = "langchain-google-genai" },
+    { name = "langchain-mcp-adapters" },
+    { name = "langchain-ollama" },
+    { name = "langchain-openai" },
+    { name = "langchain-tavily" },
+    { name = "langgraph" },
+    { name = "openai" },
+    { name = "python-dotenv" },
+    { name = "uvicorn" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "anthropic", specifier = ">=0.66.0" },
+    { name = "fastapi", specifier = ">=0.117.1" },
+    { name = "fastmcp", specifier = ">=2.12.3" },
+    { name = "google-generativeai", specifier = ">=0.8.5" },
+    { name = "langchain", specifier = ">=0.3.27" },
+    { name = "langchain-anthropic", specifier = ">=0.3.19" },
+    { name = "langchain-community", specifier = ">=0.3.29" },
+    { name = "langchain-google-genai", specifier = ">=2.0.10" },
+    { name = "langchain-mcp-adapters", specifier = ">=0.1.11" },
+    { name = "langchain-ollama", specifier = ">=0.3.8" },
+    { name = "langchain-openai", specifier = ">=0.3.32" },
+    { name = "langchain-tavily", specifier = ">=0.2.11" },
+    { name = "langgraph", specifier = ">=0.6.6" },
+    { name = "openai", specifier = ">=1.106.1" },
+    { name = "python-dotenv", specifier = ">=1.1.1" },
+    { name = "uvicorn", specifier = ">=0.36.0" },
+]
+
+[[package]]
 name = "referencing"
 version = "0.36.2"
 source = { registry = "https://pypi.org/simple" }
@@ -2392,49 +2435,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/da/8a/22b7beea3ee0d44b1916c0c1cb0ee3af23b700b6da9f04991899d0c555d4/rsa-4.9.1.tar.gz", hash = "sha256:e7bdbfdb5497da4c07dfd35530e1a902659db6ff241e39d9953cad06ebd0ae75", size = 29034, upload-time = "2025-04-16T09:51:18.218Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/64/8d/0133e4eb4beed9e425d9a98ed6e081a55d195481b7632472be1af08d2f6b/rsa-4.9.1-py3-none-any.whl", hash = "sha256:68635866661c6836b8d39430f97a996acbd61bfa49406748ea243539fe239762", size = 34696, upload-time = "2025-04-16T09:51:17.142Z" },
-]
-
-[[package]]
-name = "sample-rag-ai-agent"
-version = "0.1.0"
-source = { virtual = "." }
-dependencies = [
-    { name = "anthropic" },
-    { name = "fastapi" },
-    { name = "fastmcp" },
-    { name = "google-generativeai" },
-    { name = "langchain" },
-    { name = "langchain-anthropic" },
-    { name = "langchain-community" },
-    { name = "langchain-google-genai" },
-    { name = "langchain-mcp-adapters" },
-    { name = "langchain-ollama" },
-    { name = "langchain-openai" },
-    { name = "langchain-tavily" },
-    { name = "langgraph" },
-    { name = "openai" },
-    { name = "python-dotenv" },
-    { name = "uvicorn" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "anthropic", specifier = ">=0.66.0" },
-    { name = "fastapi", specifier = ">=0.117.1" },
-    { name = "fastmcp", specifier = ">=2.12.3" },
-    { name = "google-generativeai", specifier = ">=0.8.5" },
-    { name = "langchain", specifier = ">=0.3.27" },
-    { name = "langchain-anthropic", specifier = ">=0.3.19" },
-    { name = "langchain-community", specifier = ">=0.3.29" },
-    { name = "langchain-google-genai", specifier = ">=2.0.10" },
-    { name = "langchain-mcp-adapters", specifier = ">=0.1.11" },
-    { name = "langchain-ollama", specifier = ">=0.3.8" },
-    { name = "langchain-openai", specifier = ">=0.3.32" },
-    { name = "langchain-tavily", specifier = ">=0.2.11" },
-    { name = "langgraph", specifier = ">=0.6.6" },
-    { name = "openai", specifier = ">=1.106.1" },
-    { name = "python-dotenv", specifier = ">=1.1.1" },
-    { name = "uvicorn", specifier = ">=0.36.0" },
 ]
 
 [[package]]

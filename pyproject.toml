@@ -1,5 +1,5 @@
 [project]
-name = "sample_rag_ai-agent"
+name = "rag-ai-agent"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
