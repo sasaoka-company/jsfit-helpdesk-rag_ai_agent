@@ -4,117 +4,113 @@ MCPクライアントのテストスクリプト
 """
 
 import sys
+import os
 import traceback
+import asyncio
+
+# プロジェクトルートをパスに追加
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
 def test_imports():
     """インポートをテスト"""
     print("=== インポートテスト ===")
     try:
-        from mcp_client_fastmcp.mcp_tools_factory import create_mcp_tools
+        from mcp_client.mcp_tools_factory import create_mcp_tools
 
-        print("✓ mcp_tools_factory モジュールのインポート成功")
+        print("O mcp_tools_factory モジュールのインポート成功")
 
-        from mcp_client_fastmcp.stdio_client import create_stdio_mcp_tools
+        from config import MCP_SERVERS
 
-        print("✓ stdio_client モジュールのインポート成功")
-
-        from mcp_client_fastmcp.http_client import create_http_mcp_tools
-
-        print("✓ http_client モジュールのインポート成功")
+        print("O config モジュールのインポート成功")
+        print(
+            "O MCP_SERVERS読み込み成功: " + str(len(MCP_SERVERS)) + "個のサーバー設定"
+        )
 
         return True
     except Exception as e:
-        print(f"✗ インポートエラー: {e}")
+        print("X インポートエラー: " + str(e))
         traceback.print_exc()
         return False
 
 
-def test_stdio_tools():
-    """STDIOツールの作成をテスト"""
-    print("\n=== STDIOツール作成テスト ===")
+async def test_mcp_tools_creation():
+    """MCPツールの作成をテスト"""
+    print("\n=== MCPツール作成テスト ===")
     try:
-        from mcp_client_fastmcp.stdio_client import create_stdio_mcp_tools
+        from mcp_client.mcp_tools_factory import create_mcp_tools
 
-        tools = create_stdio_mcp_tools()
-        print(f"✓ STDIOツール作成成功: {len(tools)}個のツール")
-        for tool in tools:
-            print(f"  - {tool.name}: {tool.description}")
+        tools = await create_mcp_tools()
+        print("O MCPツール作成成功: " + str(len(tools)) + "個のツール")
+        for i, tool in enumerate(tools, 1):
+            print(
+                "  " + str(i) + ". " + tool.name + ": " + tool.description[:60] + "..."
+            )
         return True
     except Exception as e:
-        print(f"✗ STDIOツール作成エラー: {e}")
+        print("X MCPツール作成エラー: " + str(e))
         traceback.print_exc()
         return False
 
 
-def test_http_tools():
-    """HTTPツールの作成をテスト"""
-    print("\n=== HTTPツール作成テスト ===")
+def test_mcp_servers_config():
+    """MCP_SERVERS設定の確認"""
+    print("\n=== MCP_SERVERS設定テスト ===")
     try:
-        from mcp_client_fastmcp.http_client import create_http_mcp_tools
+        from config import MCP_SERVERS
 
-        tools = create_http_mcp_tools()
-        print(f"✓ HTTPツール作成成功: {len(tools)}個のツール")
-        for tool in tools:
-            print(f"  - {tool.name}: {tool.description}")
+        print("設定されたサーバー数: " + str(len(MCP_SERVERS)))
+
+        stdio_count = 0
+        http_count = 0
+
+        for server_name, config in MCP_SERVERS.items():
+            transport = config.get("transport")
+            if transport == "stdio":
+                stdio_count += 1
+                print("  STDIO: " + server_name + " -> " + config.get("command", "N/A"))
+            elif transport == "streamable_http":
+                http_count += 1
+                print("  HTTP:  " + server_name + " -> " + config.get("url", "N/A"))
+            else:
+                print("  未知:   " + server_name + " -> " + transport)
+
+        print("O STDIO サーバー: " + str(stdio_count) + "個")
+        print("O HTTP サーバー: " + str(http_count) + "個")
         return True
     except Exception as e:
-        print(f"✗ HTTPツール作成エラー: {e}")
+        print("X MCP_SERVERS設定エラー: " + str(e))
         traceback.print_exc()
         return False
 
 
-def test_dual_tools():
-    """デュアルツールの作成をテスト"""
-    print("\n=== デュアルツール作成テスト ===")
-    try:
-        from mcp_client_fastmcp import create_mcp_tools
+async def run_all_tests():
+    """すべてのテストを実行"""
+    print("MCPクライアント テストスイート開始\n")
 
-        tools = create_mcp_tools()
-        print(f"✓ デュアルツール作成成功: {len(tools)}個のツール")
-        for tool in tools:
-            print(f"  - {tool.name}: {tool.description}")
+    results = []
+
+    # 同期テスト
+    results.append(test_imports())
+    results.append(test_mcp_servers_config())
+
+    # 非同期テスト
+    results.append(await test_mcp_tools_creation())
+
+    # 結果のサマリー
+    print("=== テスト結果 ===")
+    passed = sum(results)
+    total = len(results)
+    print("成功: " + str(passed) + "/" + str(total))
+
+    if passed == total:
+        print("O すべてのテストが成功しました")
         return True
-    except Exception as e:
-        print(f"✗ デュアルツール作成エラー: {e}")
-        traceback.print_exc()
+    else:
+        print("X 一部のテストが失敗しました")
         return False
-
-
-def main():
-    """メイン関数"""
-    print("MCPクライアントテスト開始")
-    print(f"Python実行環境: {sys.executable}")
-
-    # テスト実行
-    tests = [
-        ("インポート", test_imports),
-        ("STDIO", test_stdio_tools),
-        ("HTTP", test_http_tools),
-        ("デュアル", test_dual_tools),
-    ]
-
-    results = {}
-    for test_name, test_func in tests:
-        try:
-            results[test_name] = test_func()
-        except Exception as e:
-            print(f"✗ {test_name}テスト例外: {e}")
-            traceback.print_exc()
-            results[test_name] = False
-
-    # 結果サマリー
-    print("\n=== テスト結果サマリー ===")
-    for test_name, result in results.items():
-        status = "✓ PASS" if result else "✗ FAIL"
-        print(f"{test_name}: {status}")
-
-    # 全体結果
-    all_passed = all(results.values())
-    print(f"\n全体結果: {'✓ ALL PASS' if all_passed else '✗ SOME FAILED'}")
-    return all_passed
 
 
 if __name__ == "__main__":
-    success = main()
+    success = asyncio.run(run_all_tests())
     sys.exit(0 if success else 1)

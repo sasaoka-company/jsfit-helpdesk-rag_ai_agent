@@ -1,7 +1,7 @@
 from typing import List
 from langchain_core.tools import Tool
 from langchain_mcp_adapters.client import MultiServerMCPClient
-from config import STDIO_PYTHON_EXECUTABLE, STDIO_SERVER_SCRIPT, HTTP_SERVER_URL
+from config import MCP_SERVERS
 from logger import get_logger
 
 logger = get_logger(__name__)
@@ -10,23 +10,36 @@ logger = get_logger(__name__)
 async def create_mcp_tools() -> List[Tool]:
     logger.info(">>> MCP ツール作成開始（langchain-mcp-adapters使用）")
 
-    # 複数のサーバへの接続を定義（公式ドキュメントの形式に合わせて修正）
-    server_connections = {
-        "mcp-server-stdio-01": {
-            "command": STDIO_PYTHON_EXECUTABLE,
-            "args": [STDIO_SERVER_SCRIPT],
-            "transport": "stdio",
-        },
-        "mcp-server-http-01": {
-            "url": HTTP_SERVER_URL,
-            "transport": "streamable_http",
-        },
-    }
+    # JSONから動的にserver_connectionsを構築
+    server_connections = {}
+
+    for server_name, server_config in MCP_SERVERS.items():
+        transport = server_config.get("transport")
+
+        if transport == "stdio":
+            server_connections[server_name] = {
+                "command": server_config["command"],
+                "args": server_config["args"],
+                "transport": "stdio",
+            }
+            logger.info(
+                f">>> STDIO サーバー '{server_name}' を追加: {server_config['command']}"
+            )
+
+        elif transport == "streamable_http":
+            server_connections[server_name] = {
+                "url": server_config["url"],
+                "transport": "streamable_http",
+            }
+            logger.info(
+                f">>> HTTP サーバー '{server_name}' を追加: {server_config['url']}"
+            )
+        else:
+            logger.warning(
+                f">>> 未知のtransport '{transport}' をスキップ: {server_name}"
+            )
 
     logger.info(f">>> サーバー接続設定: {server_connections}")
-    logger.info(f">>> STDIO_PYTHON_EXECUTABLE: {STDIO_PYTHON_EXECUTABLE}")
-    logger.info(f">>> STDIO_SERVER_SCRIPT: {STDIO_SERVER_SCRIPT}")
-    logger.info(f">>> HTTP_SERVER_URL: {HTTP_SERVER_URL}")
 
     try:
         # MultiServerMCPClientのインスタンスを作成（正しい引数形式）

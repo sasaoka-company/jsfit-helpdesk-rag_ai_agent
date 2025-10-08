@@ -1,6 +1,24 @@
 {
-  "HTTP_SERVER_URL": "http://127.0.0.1:8001/mcp",
-  "HTTP_TIMEOUT": 30,
-  "STDIO_PYTHON_EXECUTABLE": "D:\\github_projects\\jsfit-helpdesk-rag_mcp_server_stdio_01\\.venv\\Scripts\\python.exe",
-  "STDIO_SERVER_SCRIPT": "D:\\github_projects\\jsfit-helpdesk-rag_mcp_server_stdio_01\\rag_mcp_server_stdio_01.py"
+  "mcp-server-stdio-01": {
+    "transport": "stdio",
+    "command": "D:\\github_projects\\jsfit-helpdesk-rag_mcp_server_stdio_01\\.venv\\Scripts\\python.exe",
+    "args": [
+      "D:\\github_projects\\jsfit-helpdesk-rag_mcp_server_stdio_01\\rag_mcp_server_stdio_01.py"
+    ]
+  },
+  "mcp-server-stdio-02": {
+    "transport": "stdio",
+    "command": "D:\\github_projects\\jsfit-helpdesk-rag_mcp_server_stdio_02\\.venv\\Scripts\\python.exe",
+    "args": [
+      "D:\\github_projects\\jsfit-helpdesk-rag_mcp_server_stdio_02\\rag_mcp_server_stdio_02.py"
+    ]
+  },
+  "mcp-server-http-01": {
+    "transport": "streamable_http",
+    "url": "http://127.0.0.1:8001/mcp"
+  },
+  "mcp-server-http-02": {
+    "transport": "streamable_http",
+    "url": "http://127.0.0.1:8002/mcp"
+  }
 }

@@ -9,19 +9,36 @@ import os
 # JSONファイルから設定を読み込み
 _config_path = os.path.join(os.path.dirname(__file__), "mcp_server.json")
 with open(_config_path, "r", encoding="utf-8") as f:
-    _config = json.load(f)
+    MCP_SERVERS = json.load(f)
 
 # ========================================
-# MCPサーバー設定（HTTP方式用）
+# 後方互換性のための定数（既存コード用）
 # ========================================
-HTTP_SERVER_URL = _config["HTTP_SERVER_URL"]  # デフォルトのHTTPサーバーURL
-HTTP_TIMEOUT = _config["HTTP_TIMEOUT"]  # タイムアウト設定（秒）
+# 最初のHTTPサーバーの設定を取得
+# _first_http_server = None
+# for server_name, config in MCP_SERVERS.items():
+#     if config.get("transport") == "streamable_http":
+#         _first_http_server = config
+#         break
 
-# ========================================
-# MCPサーバー設定（標準入出力方式用）
-# ========================================
-STDIO_PYTHON_EXECUTABLE = _config["STDIO_PYTHON_EXECUTABLE"]  # Python実行ファイルのパス
-STDIO_SERVER_SCRIPT = _config["STDIO_SERVER_SCRIPT"]  # MCPサーバースクリプトのパス
+# HTTP_SERVER_URL = (
+#     _first_http_server["url"] if _first_http_server else "http://127.0.0.1:8001/mcp"
+# )
+# HTTP_TIMEOUT = 30  # デフォルト値として保持
+
+# 最初のSTDIOサーバーの設定を取得
+# _first_stdio_server = None
+# for server_name, config in MCP_SERVERS.items():
+#     if config.get("transport") == "stdio":
+#         _first_stdio_server = config
+#         break
+
+# STDIO_PYTHON_EXECUTABLE = _first_stdio_server["command"] if _first_stdio_server else ""
+# STDIO_SERVER_SCRIPT = (
+#     _first_stdio_server["args"][0]
+#     if _first_stdio_server and _first_stdio_server.get("args")
+#     else ""
+# )
 
 # ========================================
 # 使用するLLMモデル

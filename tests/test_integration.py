@@ -1,74 +1,103 @@
 #!/usr/bin/env python3
 """
-統合MCP クライアントのテストスクリプト
+MCP クライアント統合テストスクリプト
 """
 
-from agent_core import create_agent, run_agent
-from mcp_client_fastmcp import create_mcp_client_tools, SUPPORTED_TRANSPORTS
+import asyncio
+import sys
+import os
+
+# プロジェクトルートをパスに追加
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
-def test_integration():
+async def test_integration():
     """
-    統合テスト: 各トランスポート方式の基本動作確認
+    統合テスト: MCP ツールの基本動作確認
     """
     print("=== MCP クライアント統合テスト ===")
-    print(f"サポート対象トランスポート: {SUPPORTED_TRANSPORTS}")
-    print()
 
-    for transport in SUPPORTED_TRANSPORTS:
-        print(f"--- {transport.upper()} トランスポートテスト ---")
-
-        try:
-            if transport == "http":
-                # HTTP方式の場合、明示的にserver_urlを指定
-                tool = create_mcp_client_tools(
-                    transport, server_url="http://127.0.0.1:8001/mcp"
-                )
-            else:
-                tool = create_mcp_client_tools(transport)
-
-            print(f"✓ {transport} ツール作成成功")
-            print(f"  ツール名: {tool.name}")
-            print(f"  説明: {tool.description}")
-
-            # 実際のクエリテスト（接続エラーは想定内）
-            try:
-                result = tool.run("テストクエリ")
-                print(f"  クエリ結果（抜粋）: {result[:100]}...")
-            except Exception as e:
-                if "接続エラー" in str(e) or "failed to connect" in str(e):
-                    print(
-                        f"  ✓ クエリテスト: 接続エラー（MCPサーバー未起動のため想定内）"
-                    )
-                else:
-                    print(f"  ⚠ クエリテストエラー: {e}")
-
-        except Exception as e:
-            print(f"  ✗ {transport} ツール作成失敗: {e}")
-
-        print()
-
-
-def test_invalid_transport():
-    """
-    無効なトランスポート指定のテスト
-    """
-    print("--- 無効なトランスポート指定テスト ---")
     try:
-        tool = create_mcp_client_tools("invalid_transport")
-        print("✗ 無効なトランスポートが受け入れられました（想定外）")
-    except ValueError as e:
-        print(f"✓ 無効なトランスポートが適切に拒否されました: {e}")
+        from mcp_client.mcp_tools_factory import create_mcp_tools
+        from config import MCP_SERVERS
+
+        print(f"設定されたサーバー数: {len(MCP_SERVERS)}")
+
+        # ツール作成テスト
+        print("\n--- ツール作成テスト ---")
+        tools = await create_mcp_tools()
+        print(f"✓ ツール作成成功: {len(tools)}個")
+
+        if tools:
+            print("作成されたツール一覧:")
+            for i, tool in enumerate(tools, 1):
+                print(f"  {i}. {tool.name}")
+                print(f"     説明: {tool.description[:80]}...")
+        else:
+            print("⚠ ツールが作成されませんでした")
+            return False
+
+        return True
+
     except Exception as e:
-        print(f"⚠ 予期しないエラー: {e}")
+        print(f"✗ 統合テストエラー: {e}")
+        import traceback
+
+        traceback.print_exc()
+        return False
+
+
+async def test_server_connections():
+    """サーバー接続テスト"""
+    print("\n=== サーバー接続テスト ===")
+
+    try:
+        from config import MCP_SERVERS
+
+        stdio_servers = []
+        http_servers = []
+
+        for server_name, config in MCP_SERVERS.items():
+            transport = config.get("transport")
+            if transport == "stdio":
+                stdio_servers.append(server_name)
+            elif transport == "streamable_http":
+                http_servers.append(server_name)
+
+        print(f"STDIO サーバー ({len(stdio_servers)}個): {', '.join(stdio_servers)}")
+        print(f"HTTP サーバー ({len(http_servers)}個): {', '.join(http_servers)}")
+
+        return True
+
+    except Exception as e:
+        print(f"✗ サーバー接続テストエラー: {e}")
+        return False
+
+
+async def run_integration_tests():
+    """統合テストを実行"""
+    print("MCP 統合テストスイート開始\n")
+
+    results = []
+
+    # テスト実行
+    results.append(await test_server_connections())
+    results.append(await test_integration())
+
+    # 結果のサマリー
+    print(f"\n=== 統合テスト結果 ===")
+    passed = sum(results)
+    total = len(results)
+    print(f"成功: {passed}/{total}")
+
+    if passed == total:
+        print("✓ すべての統合テストが成功しました")
+        return True
+    else:
+        print("✗ 一部の統合テストが失敗しました")
+        return False
 
 
 if __name__ == "__main__":
-    print("注意: このテストはMCPサーバーが起動していなくても実行可能です。")
-    print("接続エラーは正常な動作として表示されます。")
-    print()
-
-    test_integration()
-    test_invalid_transport()
-
-    print("=== 統合テスト完了 ===")
+    success = asyncio.run(run_integration_tests())
+    sys.exit(0 if success else 1)
