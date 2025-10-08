@@ -1,15 +1,12 @@
 import logging
 import logging.handlers
 import os
-import datetime
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # このファイルのある場所
 LOG_DIR = os.path.join(BASE_DIR, "log")
 
-# 日時とプロセスIDを含むログファイル名で、ソート可能かつプロセス間競合を回避
-PROCESS_ID = os.getpid()
-START_TIME = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-LOG_FILE = os.path.join(LOG_DIR, f"app_{START_TIME}_pid{PROCESS_ID}.log")
+# 日付ベースのログファイル名（ローテーション用）
+LOG_FILE = os.path.join(LOG_DIR, "app.log")
 
 os.makedirs(LOG_DIR, exist_ok=True)
 
@@ -23,14 +20,13 @@ def get_logger(name: str) -> logging.Logger:
 
     logger.setLevel(logging.INFO)
 
-    # サイズベースのローテーションハンドラーを使用（複数プロセス対応）
-    # プロセス毎に独立したログファイルを使用して競合を完全に回避
-    fh = logging.handlers.RotatingFileHandler(
+    # 日付単位のローテーションハンドラーを使用
+    fh = logging.handlers.TimedRotatingFileHandler(
         LOG_FILE,
-        maxBytes=10 * 1024 * 1024,  # 10MB
-        backupCount=5,  # プロセス毎なので5ファイル分で十分
+        when="midnight",  # 毎日午前0時にローテーション
+        interval=1,  # 1日間隔
+        backupCount=365,  # 365日分のログを保持
         encoding="utf-8",
-        delay=True,  # ファイル作成を遅延させて競合を軽減
     )
     fh.setLevel(logging.INFO)
 
@@ -41,7 +37,7 @@ def get_logger(name: str) -> logging.Logger:
 
     logger.addHandler(fh)
 
-    # 親ロガーに伝播しないようにして重複を防ぐ
+    # ルートロガーへの伝播を無効化（親ロガーのハンドラーによる重複出力を防止）
     logger.propagate = False
 
     return logger

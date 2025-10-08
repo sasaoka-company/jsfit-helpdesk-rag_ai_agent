@@ -43,15 +43,17 @@ class QueryRequest(BaseModel):
 
 @app.post("/query")
 async def query_endpoint(request: QueryRequest):
-    start_time = time.time()
-    logger.info(f"クエリ処理開始: {request.query}")
 
     try:
         # エージェントを遅延取得（初回のみ初期化処理が実行される）
         agent_start = time.time()
+        logger.info(f"エージェント取得開始")
         current_agent = await get_agent()
         agent_time = time.time() - agent_start
         logger.info(f"エージェント取得完了: {agent_time:.2f}秒")
+
+        query_start = time.time()
+        logger.info(f"クエリ処理開始: {request.query}")
 
         # ユーザーのクエリをHumanMessageに変換
         messages = [HumanMessage(content=request.query)]
@@ -61,14 +63,15 @@ async def query_endpoint(request: QueryRequest):
         ai_message = await run_agent(current_agent, messages)
         generation_time = time.time() - generation_start
 
-        total_time = time.time() - start_time
+        query_time = time.time() - query_start
         logger.info(
-            f"クエリ処理完了: 生成時間={generation_time:.2f}秒, 総時間={total_time:.2f}秒"
+            f"クエリ処理完了: 生成時間={generation_time:.2f}秒, 総時間={query_time:.2f}秒"
         )
+        logger.info(f"生成された回答: {ai_message.content}")
 
         return {"query": request.query, "answer": ai_message.content}
     except Exception as e:
-        error_time = time.time() - start_time
+        error_time = time.time() - query_start
         logger.error(
             f"クエリ処理中にエラーが発生しました (処理時間: {error_time:.2f}秒): {e}"
         )
