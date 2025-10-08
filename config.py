@@ -7,7 +7,7 @@ import json
 import os
 
 # JSONファイルから設定を読み込み
-_config_path = os.path.join(os.path.dirname(__file__), "config.json")
+_config_path = os.path.join(os.path.dirname(__file__), "mcp_server.json")
 with open(_config_path, "r", encoding="utf-8") as f:
     _config = json.load(f)
 
@@ -20,8 +20,8 @@ HTTP_TIMEOUT = _config["HTTP_TIMEOUT"]  # タイムアウト設定（秒）
 # ========================================
 # MCPサーバー設定（標準入出力方式用）
 # ========================================
-STDIO_PYTHON_EXECUTABLE = _config["STDIO_PYTHON_EXECUTABLE"]
-STDIO_SERVER_SCRIPT = _config["STDIO_SERVER_SCRIPT"]
+STDIO_PYTHON_EXECUTABLE = _config["STDIO_PYTHON_EXECUTABLE"]  # Python実行ファイルのパス
+STDIO_SERVER_SCRIPT = _config["STDIO_SERVER_SCRIPT"]  # MCPサーバースクリプトのパス
 
 # ========================================
 # 使用するLLMモデル
