@@ -4,7 +4,6 @@ from typing import List
 from langchain_core.messages import BaseMessage, AIMessage
 from langchain_core.tools import Tool
 
-# from langchain_tavily import TavilySearch
 from langgraph.prebuilt import create_react_agent
 from langchain.chat_models import init_chat_model
 from langchain_ollama import ChatOllama
@@ -37,15 +36,10 @@ async def create_agent(model_name: str = LLM_MODEL):
             model = init_chat_model(model_name)
             logger.info(f"外部モデルを初期化しました: {model_name}")
 
-        # # Web検索ツール（ツール利用のサンプルとして実装）
-        # web_search_tool = TavilySearch(max_results=5)
-
         # MCPクライアントツール準備（langchain-mcp-adapters使用）
         logger.info(">>> langchain-mcp-adapters を使用してMCPツールを作成")
         mcp_tools: List[Tool] = await create_mcp_tools()
 
-        # # 利用するツール一覧
-        # tools = [web_search_tool] + mcp_tools
         # 利用するツール一覧
         tools = []
         tools.extend(mcp_tools)
@@ -56,10 +50,10 @@ async def create_agent(model_name: str = LLM_MODEL):
             "必要に応じてネットも検索してください。"
         )
 
-        # MCPツールの情報を動的に追加
+        # プロンプトにMCPツールの情報（名前・説明・方式）を動的に追加
+        # ※MCPツールは社内業務用で役割・使い方が多様なため、AIが適切に選択・活用できるよう明示する
         mcp_tools_info = []
         for tool in tools:
-            # web_search_tool以外のMCPツールを対象にする
             if hasattr(tool, "func") and hasattr(tool.func, "_mcp_meta"):
                 transport = tool.func._mcp_meta.get("transport", "unknown")
                 transport_label = {
@@ -69,7 +63,6 @@ async def create_agent(model_name: str = LLM_MODEL):
                 mcp_tools_info.append(
                     f"- {tool.name}: {tool.description} ({transport_label})"
                 )
-
         if mcp_tools_info:
             prompt = (
                 base_prompt
