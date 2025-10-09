@@ -2,7 +2,8 @@ import logging
 import logging.handlers
 import os
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # このファイルのある場所
+# プロジェクトルート
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOG_DIR = os.path.join(BASE_DIR, "log")
 
 # 日付ベースのログファイル名（ローテーション用）

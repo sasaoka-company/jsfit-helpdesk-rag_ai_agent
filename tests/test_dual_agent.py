@@ -1,42 +1,29 @@
-#!/usr/bin/env python3
-"""
-デュアルMCP（STDIO + HTTP）エージェントのテストスクリプト
-"""
-
-import asyncio
-from langchain_core.messages import HumanMessage
-from agent_core import create_agent, create_default_agent
-from mcp_client_fastmcp import create_mcp_client_tools, create_dual_mcp_tools
-
-
-def test_dual_mcp_tools():
-    """
-    デュアルMCPツール作成のテスト
-    """
-    print("=== デュアルMCPツール作成テスト ===")
-
-    try:
-        print("1. create_mcp_client_tools() テスト")
-        tools = create_mcp_client_tools(server_url="http://127.0.0.1:8000/mcp")
-        print(f"作成されたツール数: {len(tools)}")
-        for i, tool in enumerate(tools):
-            print(f"  ツール{i+1}: {tool.name} - {tool.description[:50]}...")
-        print()
-
-        print("2. create_dual_mcp_tools() テスト")
-        dual_tools = create_dual_mcp_tools(
-            http_config={"server_url": "http://127.0.0.1:8000/mcp"}
-        )
-        print(f"作成されたツール辞書: {list(dual_tools.keys())}")
-        for transport, tool in dual_tools.items():
-            if tool:
-                print(f"  {transport}: {tool.name}")
-            else:
-                print(f"  {transport}: 作成失敗")
-        print()
-
-    except Exception as e:
-        print(f"デュアルMCPツールテストでエラー: {e}")
+# mcp_client_fastmcp.pyは削除済みのため、このテストは不要です。
+# def test_dual_mcp_tools():
+#     """
+#     デュアルMCPツール作成のテスト
+#     """
+#     print("=== デュアルMCPツール作成テスト ===")
+#     try:
+#         print("1. create_mcp_client_tools() テスト")
+#         tools = create_mcp_client_tools(server_url="http://127.0.0.1:8000/mcp")
+#         print(f"作成されたツール数: {len(tools)}")
+#         for i, tool in enumerate(tools):
+#             print(f"  ツール{i+1}: {tool.name} - {tool.description[:50]}...")
+#         print()
+#         print("2. create_dual_mcp_tools() テスト")
+#         dual_tools = create_dual_mcp_tools(
+#             http_config={"server_url": "http://127.0.0.1:8000/mcp"}
+#         )
+#         print(f"作成されたツール辞書: {list(dual_tools.keys())}")
+#         for transport, tool in dual_tools.items():
+#             if tool:
+#                 print(f"  {transport}: {tool.name}")
+#             else:
+#                 print(f"  {transport}: 作成失敗")
+#         print()
+#     except Exception as e:
+#         print(f"デュアルMCPツールテストでエラー: {e}")
 
 
 def test_dual_agent_creation():

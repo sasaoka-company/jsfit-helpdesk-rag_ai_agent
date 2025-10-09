@@ -1,8 +1,8 @@
 from typing import List
 from langchain_core.tools import Tool
 from langchain_mcp_adapters.client import MultiServerMCPClient
-from config import MCP_SERVERS
-from logger import get_logger
+from src.config import MCP_SERVERS
+from src.logger import get_logger
 
 logger = get_logger(__name__)
 

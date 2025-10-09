@@ -11,9 +11,9 @@ import time
 # プロジェクトルートをパスに追加
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from agent_core import create_agent, run_agent
+from src.agent_core import create_agent, run_agent
 from langchain_core.messages import HumanMessage
-from logger import get_logger
+from src.logger import get_logger
 
 logger = get_logger(__name__)
 

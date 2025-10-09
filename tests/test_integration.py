@@ -1,3 +1,5 @@
+import pytest
+
 #!/usr/bin/env python3
 """
 MCP クライアント統合テストスクリプト
@@ -11,6 +13,7 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
+@pytest.mark.asyncio
 async def test_integration():
     """
     統合テスト: MCP ツールの基本動作確認
@@ -18,16 +21,14 @@ async def test_integration():
     print("=== MCP クライアント統合テスト ===")
 
     try:
-        from mcp_client.mcp_tools_factory import create_mcp_tools
-        from config import MCP_SERVERS
+        from src.mcp_client.mcp_tools_factory import create_mcp_tools
+        from src.config import MCP_SERVERS
 
         print(f"設定されたサーバー数: {len(MCP_SERVERS)}")
-
         # ツール作成テスト
         print("\n--- ツール作成テスト ---")
         tools = await create_mcp_tools()
         print(f"✓ ツール作成成功: {len(tools)}個")
-
         if tools:
             print("作成されたツール一覧:")
             for i, tool in enumerate(tools, 1):
@@ -36,9 +37,7 @@ async def test_integration():
         else:
             print("⚠ ツールが作成されませんでした")
             return False
-
         return True
-
     except Exception as e:
         print(f"✗ 統合テストエラー: {e}")
         import traceback
@@ -47,16 +46,16 @@ async def test_integration():
         return False
 
 
+@pytest.mark.asyncio
 async def test_server_connections():
     """サーバー接続テスト"""
     print("\n=== サーバー接続テスト ===")
 
     try:
-        from config import MCP_SERVERS
+        from src.config import MCP_SERVERS
 
         stdio_servers = []
         http_servers = []
-
         for server_name, config in MCP_SERVERS.items():
             transport = config.get("transport")
             if transport == "stdio":

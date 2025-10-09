@@ -2,8 +2,8 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from langchain_core.messages import HumanMessage
-from agent_core import create_agent, run_agent
-from logger import get_logger
+from src.agent_core import create_agent, run_agent
+from src.logger import get_logger
 import time
 
 # ロガー設定

@@ -8,7 +8,7 @@ from datetime import datetime
 # プロジェクトルートをパスに追加
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from logger import get_logger
+from src.logger import get_logger
 
 
 def test_logger_rotation():

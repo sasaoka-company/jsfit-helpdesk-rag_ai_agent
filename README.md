@@ -38,7 +38,7 @@ uv sync
 # 4. サーバ起動
 
 ```powershell
-uvicorn agent_api:app --reload --port 8000
+uvicorn src.agent_api:app --reload --port 8000
 ```
 
 ## （参考）ブラウザから Swagger UI を利用
