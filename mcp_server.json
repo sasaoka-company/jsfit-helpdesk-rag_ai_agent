@@ -3,14 +3,14 @@
     "transport": "stdio",
     "command": "D:\\github_projects\\jsfit-helpdesk-rag_mcp_server_stdio_01\\.venv\\Scripts\\python.exe",
     "args": [
-      "D:\\github_projects\\jsfit-helpdesk-rag_mcp_server_stdio_01\\rag_mcp_server_stdio_01.py"
+      "D:\\github_projects\\jsfit-helpdesk-rag_mcp_server_stdio_01\\src\\rag_mcp_server_stdio_01.py"
     ]
   },
   "mcp-server-stdio-02": {
     "transport": "stdio",
     "command": "D:\\github_projects\\jsfit-helpdesk-rag_mcp_server_stdio_02\\.venv\\Scripts\\python.exe",
     "args": [
-      "D:\\github_projects\\jsfit-helpdesk-rag_mcp_server_stdio_02\\rag_mcp_server_stdio_02.py"
+      "D:\\github_projects\\jsfit-helpdesk-rag_mcp_server_stdio_02\\src\\rag_mcp_server_stdio_02.py"
     ]
   },
   "mcp-server-http-01": {

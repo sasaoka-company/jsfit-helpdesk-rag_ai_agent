@@ -6,10 +6,14 @@
 import json
 import os
 
+# ========================================
+# プロジェクトルートディレクトリ
+# ========================================
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
 # JSONファイルから設定を読み込み
-_config_path = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)), "mcp_server.json"
-)
+_config_path = os.path.join(ROOT_DIR, "mcp_server.json")
 with open(_config_path, "r", encoding="utf-8") as f:
     MCP_SERVERS = json.load(f)
 
