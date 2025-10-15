@@ -35,6 +35,13 @@ git config --global core.autocrlf false
 uv sync
 ```
 
+## 3-3. MCP サーバの設定
+
+プロジェクトルートにある`mcp_server.json`に、接続する MCP サーバ情報を設定する。
+
+- MCP サーバの接続は、標準入出力方式と Streamable HTTP 方式の２方式あり、両方をサポート。
+- 標準入出力方式と Streamable HTTP 方式、それぞれ複数の MCP サーバが設定可能。
+
 # 4. サーバ起動
 
 ```powershell

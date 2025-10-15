@@ -21,8 +21,8 @@ with open(_config_path, "r", encoding="utf-8") as f:
 # ========================================
 # 使用するLLMモデル
 # ========================================
-LLM_MODEL = "llama3.1:8b"
-# LLM_MODEL = "gpt-oss:20b"  # 20Bパラメータモデル - 処理時間が長いため注意
+# LLM_MODEL = "llama3.1:8b"
+LLM_MODEL = "gpt-oss:20b"  # 20Bパラメータモデル - 処理時間が長いため注意
 # LLM_MODEL = "openai:gpt-5-nano"
 # LLM_MODEL = "google_genai:gemini-2.5-flash-lite"
 # LLM_MODEL = "anthropic:claude-3-haiku-20240307"

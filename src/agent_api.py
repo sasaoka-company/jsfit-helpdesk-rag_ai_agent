@@ -1,4 +1,7 @@
 # agent_api.py
+import sys
+import os
+
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from langchain_core.messages import HumanMessage
@@ -8,6 +11,11 @@ import time
 
 # ロガー設定
 logger = get_logger(__name__)
+
+logger.info("=== SERVER STARTED ===")
+logger.info("sys.executable: %s", sys.executable)
+logger.info("sys.prefix: %s", sys.prefix)
+logger.info("PATH: %s", os.environ.get("PATH"))
 
 app = FastAPI(title="AIエージェントサーバー")
 
@@ -52,6 +60,16 @@ async def query_endpoint(request: QueryRequest):
         agent_time = time.time() - agent_start
         logger.info(f"エージェント取得完了: {agent_time:.2f}秒")
 
+    except Exception as e:
+        error_time = time.time() - agent_start
+        logger.error(
+            f"エージェント取得処理中にエラーが発生しました (処理時間: {error_time:.2f}秒): {e}"
+        )
+        raise HTTPException(
+            status_code=500, detail=f"内部エラーが発生しました: {str(e)}"
+        )
+
+    try:
         query_start = time.time()
         logger.info(f"クエリ処理開始: {request.query}")
 
