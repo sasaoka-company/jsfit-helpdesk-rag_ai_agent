@@ -57,3 +57,20 @@ http://127.0.0.1:8000/docs
 ```powershell
 uv run pytest tests/ -v
 ```
+
+# 6. その他
+
+## 6-1. Embedding モデルを切り替える
+
+以下変更箇所のコメントアウトを切り替える。
+
+- `.env`
+  OPENAI_API_BASE
+  OPENAI_API_KEY
+  ANTHROPIC_API_KEY
+  など
+
+※ Ollama を使わない場合は`OPENAI_API_BASE`定数はコメントアウトして無効にする
+
+- `config.py`
+  LLM_MODEL
