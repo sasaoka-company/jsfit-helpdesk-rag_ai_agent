@@ -11,7 +11,7 @@ from openai.types.chat import ChatCompletionMessageParam
 
 from src.sample.configs import Settings
 from src.logger import get_logger
-from sample.models import (
+from src.sample.models import (
     AgentResult,
     Plan,
     ReflectionResult,

@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
-from qdrant_client.models import ScoredPoint
+
+# from qdrant_client.models import ScoredPoint
 
 
 class SearchOutput(BaseModel):
@@ -13,7 +14,8 @@ class SearchOutput(BaseModel):
         )
 
     @classmethod
-    def from_point(cls, point: ScoredPoint) -> "SearchOutput":
+    # def from_point(cls, point: ScoredPoint) -> "SearchOutput":
+    def from_point(cls, point) -> "SearchOutput":
         if point.payload is None:
             raise ValueError("Payload is None")
         return cls(
