@@ -1,6 +1,8 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from src.sample.agent import HelpDeskAgent
+from src.sample.agent import AgentState
+from src.sample.agent import AgentSubGraphState
 from src.sample.configs import Settings
 from src.sample.prompts import HelpDeskAgentPrompts
 from src.mcp_client.mcp_tools_factory import create_mcp_tools
@@ -14,7 +16,7 @@ app = FastAPI()
 
 
 class AgentRequest(BaseModel):
-    question: str
+    pass
 
 
 # 起動コマンド：
@@ -27,9 +29,19 @@ async def run_agent_api(request: AgentRequest):
         # 設定・プロンプトを用意
         settings = Settings()
         prompts = HelpDeskAgentPrompts()
+
         # エージェントを初期化
         agent = HelpDeskAgent(settings=settings, tools=tools, prompts=prompts)
-        test(agent, request.question)
+
+        # テスト用クエリ
+        query = create_query()
+
+        # # create_planのテスト
+        # test_create_plan(agent, query)
+
+        # select_toolsのテスト
+        test_select_tool(agent, query)
+
         # # エージェントワークフローを実行
         # result = agent.run_agent(request.question)
         # return result
@@ -39,8 +51,38 @@ async def run_agent_api(request: AgentRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-def test(agent: HelpDeskAgent, query: str) -> None:
-    question = """
+def test_create_plan(agent: HelpDeskAgent, query: str) -> dict:
+    state = AgentState(question=query)
+
+    plan_result = agent.create_plan(state=state)
+
+    logger.info(f'★plan_result["plan"]: {plan_result["plan"]}')
+
+    return plan_result
+
+
+def test_select_tool(agent: HelpDeskAgent, query: str) -> None:
+    # プラン作成
+    plan_result = test_create_plan(agent, query)
+
+    sub_state = AgentSubGraphState(
+        question=query,
+        plan=plan_result["plan"],
+        subtask=plan_result["plan"][0],  # 最初のサブタスクを選択
+        challenge_count=0,
+        is_completed=False,
+    )
+
+    tool_result = agent.select_tools(state=sub_state)
+
+    logger.info(f"★tool_result: {tool_result}")
+    logger.info(f"★tool_result['messages'][-1]: {tool_result['messages'][-1]}")
+
+    return tool_result
+
+
+def create_query() -> str:
+    query = """
     お世話になっております。
 
     現在、XYZシステムの利用を検討しており、以下の2点についてご教示いただければと存じます。
@@ -53,11 +95,8 @@ def test(agent: HelpDeskAgent, query: str) -> None:
 
     お忙しいところ恐縮ですが、ご対応のほどよろしくお願い申し上げます。
     """
-    input_data = {"question": question}
 
-    plan_result = agent.create_plan(state=input_data)
-
-    logger.info(f'★plan_result["plan"]: {plan_result["plan"]}')
+    return query
 
 
 def create_test_agent_result(question: str) -> AgentResult:
